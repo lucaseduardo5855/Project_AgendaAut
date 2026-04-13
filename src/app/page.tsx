@@ -1,7 +1,18 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { CheckCircle, Calendar, Smartphone, DollarSign, MessageCircle, PieChart, Check, Share2 } from "lucide-react";
 
-export default function Home() {
+export default function Home({ searchParams }: { searchParams: { error?: string, code?: string } }) {
+  
+  // Se o Supabase jogar erros de e-mail expirados para a home (devido ao template antigo):
+  if (searchParams.error) {
+    redirect(`/auth?error=${encodeURIComponent("O link de e-mail expirou ou seu provedor já o verificou previamenente. Peça um novo link fazendo login.")}`)
+  }
+
+  // Se o Supabase mandar o código PKCE para a Home por engano:
+  if (searchParams.code) {
+    redirect(`/auth/callback?code=${searchParams.code}`)
+  }
   return (
     <div className="flex flex-col min-h-screen font-sans">
       
@@ -18,10 +29,10 @@ export default function Home() {
             <Link href="#planos" className="hidden md:block text-sm font-semibold text-slate-500 hover:text-primary-600 transition-colors duration-300">
               Planos
             </Link>
-            <Link href="#login" className="hidden sm:block text-sm font-semibold text-foreground hover:text-primary-600 ml-4">
+            <Link href="/auth" className="hidden sm:block text-sm font-semibold text-foreground hover:text-primary-600 ml-4">
               Entrar
             </Link>
-            <Link href="#signup" className="text-sm font-black text-white bg-primary-600 hover:bg-primary-700 px-5 py-2.5 rounded-full transition-shadow hover:shadow-lg hover:shadow-primary-600/20">
+            <Link href="/auth" className="text-sm font-black text-white bg-primary-600 hover:bg-primary-700 px-5 py-2.5 rounded-full transition-shadow hover:shadow-lg hover:shadow-primary-600/20">
               Teste Grátis
             </Link>
           </div>
@@ -51,7 +62,7 @@ export default function Home() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <Link href="#signup" className="flex items-center justify-center font-bold text-white bg-foreground hover:bg-black px-8 py-4 rounded-full text-lg transition-transform hover:scale-105">
+              <Link href="/auth" className="flex items-center justify-center font-bold text-white bg-foreground hover:bg-black px-8 py-4 rounded-full text-lg transition-transform hover:scale-105">
                 Começar agora 🚀
               </Link>
             </div>
@@ -306,7 +317,7 @@ export default function Home() {
                   </li>
                </ul>
 
-               <Link href="#signup" className="bg-[#218838] hover:bg-[#1e7e34] text-white font-bold py-4 px-8 rounded transition-colors shadow-lg hover:shadow-xl text-sm tracking-wider uppercase">
+               <Link href="/auth" className="bg-[#218838] hover:bg-[#1e7e34] text-white font-bold py-4 px-8 rounded transition-colors shadow-lg hover:shadow-xl text-sm tracking-wider uppercase">
                   Testar Grátis hoje
                </Link>
             </div>
@@ -409,7 +420,7 @@ export default function Home() {
                   <li className="flex gap-3 items-center text-slate-300"><CheckCircle size={20}/> Cobrança via PIX</li>
                   <li className="flex gap-3 items-center text-slate-300"><CheckCircle size={20}/> Lembretes p/ WhatsApp</li>
                 </ul>
-                <Link href="#signup" className="w-full text-center font-bold text-primary-700 bg-primary-50 border border-primary-200 hover:bg-primary-100 hover:border-primary-300 py-4 rounded-xl transition-all shadow-sm">
+                <Link href="/auth" className="w-full text-center font-bold text-primary-700 bg-primary-50 border border-primary-200 hover:bg-primary-100 hover:border-primary-300 py-4 rounded-xl transition-all shadow-sm">
                   Começar Grátis
                 </Link>
               </div>
@@ -436,7 +447,7 @@ export default function Home() {
                   <li className="flex gap-3 items-center text-white font-medium"><CheckCircle size={20} className="text-[#ffcc00]"/> Lembretes de WhatsApp Ativos</li>
                   <li className="flex gap-3 items-center text-white font-medium"><CheckCircle size={20} className="text-[#ffcc00]"/> Relatório Financeiro</li>
                 </ul>
-                <Link href="#signup" className="w-full text-center font-bold text-yellow-900 bg-[#ffcc00] hover:bg-[#ffdb4d] py-4 rounded-xl transition-all shadow-lg hover:shadow-xl">
+                <Link href="/auth" className="w-full text-center font-bold text-yellow-900 bg-[#ffcc00] hover:bg-[#ffdb4d] py-4 rounded-xl transition-all shadow-lg hover:shadow-xl">
                   Assinar Profissional
                 </Link>
               </div>
@@ -511,7 +522,7 @@ export default function Home() {
                             Ao clicar em Experimentar você concorda com o <Link href="#" className="font-bold hover:text-white transition-colors">Termos de Uso</Link> e <Link href="#" className="font-bold hover:text-white transition-colors">Política de privacidade</Link>
                           </p>
                           
-                          <Link href="#login" className="text-center text-xs font-bold text-white hover:text-primary-200 transition-colors">
+                          <Link href="/auth" className="text-center text-xs font-bold text-white hover:text-primary-200 transition-colors">
                             Já é nosso cliente? Clique Aqui!
                           </Link>
                         </div>
